@@ -268,6 +268,310 @@ var Item = Backbone.View.extend({
             - Paradigm Shift
           </Text>
         </Slide>
+        <Slide bgColor="tertiary">
+          <Heading size="3" textColor="primary">
+            React
+          </Heading>
+          <Heading size="4" textColor="primary">
+            What's all the fuss about?
+          </Heading>
+        </Slide>
+        <Slide>
+          <p>
+            React is a UI library developed at Facebook to facilitate the
+            creation
+            of interactive, stateful & reusable UI components.
+          </p>
+          <BlockQuote>
+            <Quote textColor="secondary">view = f(data)</Quote>
+          </BlockQuote>
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            JSX
+          </Heading>
+          <CodePane
+            lang="jsx"
+            source={`
+import React from 'react'
+
+class ShoppingList extends React.Component {
+  render() {
+    return (
+      <div className="shopping-list">
+        <h1>Shopping List for {this.props.name}</h1>
+        <ul>
+          <li>Tomatoes</li>
+          <li>Bananas</li>
+          <li>Beans</li>
+        </ul>
+      </div>
+    );
+  }
+}
+
+// Example usage: <ShoppingList name="Jean-Pierre" />
+            `}
+            margin="20px auto"
+          />
+          Will be transpiled into
+          <CodePane
+            lang="js"
+            source={`
+return React.createElement('div', {className: 'shopping-list'},
+  React.createElement('h1', /* ... h1 children ... */),
+  React.createElement('ul', /* ... ul children ... */)
+);
+            `}
+            margin="20px auto"
+          />
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Functionnal
+          </Heading>
+          <CodePane
+            lang="jsx"
+            source={`
+const Hello = (props) =>
+  <Block>
+    <h1>
+      Hello <UserName user={{ firstname: 'Jean-Pierre', lastname: 'Dupont' }}/>
+    </h1>
+  </Block>
+
+
+const UserName = (props) =>
+  <span>{props.user.firstname} {props.user.lastname}</span>
+
+
+const Block = (props) =>
+  <div style={{ fontSize: '14px' }}>{props.children}</div>
+
+
+// Mount component
+React.render(<MyComponent name="Jean-Pierre" />, document.getElementById('myDiv'));
+            `}
+            margin="20px auto"
+          />
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Lifecycle
+          </Heading>
+          <List>
+            <ListItem>componentWillMount</ListItem>
+            <ListItem>componentDidMount</ListItem>
+            <ListItem>shouldComponentUpdate</ListItem>
+            <ListItem>componentWillUnmount</ListItem>
+          </List>
+
+          <Heading size={5} textColor="tertiary">
+            Specs
+          </Heading>
+          <List>
+            <ListItem>getInitialState</ListItem>
+            <ListItem>getDefaultProps</ListItem>
+          </List>
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            setState
+          </Heading>
+          <CodePane
+            lang="jsx"
+            source={`
+class Counter extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  incrementCount = () => {
+    this.setState(state => ({ count: state.count + 1 }));
+  };
+
+  componentWillMount() {
+    console.log('Counter will mount')
+  }
+
+  render() {
+    return (
+      <button onClick={ this.incrementCount }>
+        Clicks: { this.state.count }
+      </button>
+    );
+  }
+});
+
+React.render(<Counter/>, document.getElementById('myDiv'));
+            `}
+            margin="20px auto"
+          />
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Unidirectional Data Flow
+          </Heading>
+          <CodePane
+            lang="jsx"
+            source={`
+class FilteredList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { initialItems: ["Apples", "Broccoli", "Chicken", "Eggs", "Fish"], items: [] };
+  }
+  componentWillMount() {
+    this.setState({items: this.state.initialItems})
+  }
+  filterList = (event) => {
+    this.setState(state => ({
+      items: state.initialItems.filter(item => item.search(event.target.value) !== -1)
+    }));
+  }
+  render() {
+    return (
+      <div className="filter-list">
+        <input type="text" placeholder="Search" onChange={this.filterList}/>
+        <List items={this.state.items}/>
+      </div>
+    );
+  }
+}
+
+class List extends React.Component {
+  render() {
+    return (
+      <ul>{this.props.items.map(item => <li key={item}>{item}</li>)}</ul>
+    );
+  }
+});
+
+React.render(<Counter/>, document.getElementById('myDiv'));
+            `}
+            margin="10px auto"
+          />
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Patterns
+          </Heading>
+          Components everywhere
+          <CodePane
+            lang="jsx"
+            source={`
+class Log extends React.Component {
+  componentDidMount() {
+    console.log('Log about component lifecycle')
+  }
+
+  render() {
+    return null
+  }
+});
+
+const MyComponent = (props) =>
+  <div>
+    <Log/>
+    My Component
+  </div>
+            `}
+            margin="20px auto"
+          />
+          High order component
+          <CodePane
+            lang="jsx"
+            source={`
+const enhance = (Component) => class extends React.Component {
+  render() {
+    const user = 'bob'
+    return <Component user={user}/>
+  }
+});
+const MyComponent = (props) => <span>{props.user}</span>
+const MyEnhancedComponent = enhance(MyComponent)
+            `}
+            margin="20px auto"
+          />
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Server Side Rendering
+          </Heading>
+          <CodePane
+            lang="jsx"
+            source={`
+              const MyComponent = props => <div>Hello World</div>
+
+              ReactDOMServer.renderToString(<MyComponent/>)
+
+              // String "<div>Hello World</div>"
+            `}
+            margin="20px auto"
+          />
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Render everywhere
+          </Heading>
+          <CodePane
+            lang="jsx"
+            source={`
+import React, { Component } from 'react';
+import { Text, View } from 'react-native';
+
+class MyComponent extends Component {
+  render() {
+    return (
+      <View>
+        <Text>
+          If you like React on the web, you'll like React Native.
+        </Text>
+        <Text>
+          You just use native components like 'View' and 'Text',
+          instead of web components like 'div' and 'span'.
+        </Text>
+      </View>
+    );
+  }
+}
+            `}
+            margin="20px auto"
+          />
+          IOS, Android, Ubuntu, Web,...
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Ecosystem
+          </Heading>
+          <List>
+            <ListItem>Flowtype</ListItem>
+            <ListItem>Redux</ListItem>
+            <ListItem>Router</ListItem>
+            <ListItem>GraphQL</ListItem>
+          </List>
+        </Slide>
+        {/* <Slide>
+          <Heading size={5} textColor="tertiary">
+            Flowtype
+          </Heading>
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Redux
+          </Heading>
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            Router
+          </Heading>
+        </Slide>
+        <Slide>
+          <Heading size={5} textColor="tertiary">
+            GraphQL
+          </Heading>
+        </Slide> */}
         <Slide transition={["fade"]}>
           <Heading size={6} textColor="tertiary" caps>Made with</Heading>
           <br />
